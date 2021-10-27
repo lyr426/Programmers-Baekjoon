@@ -7,6 +7,7 @@
 Programmers
 -------------
 - 레벨 별로 구분하여 업데이트 
+- java를 이용하여 문제풀이 
 
 <br>
 <br>
@@ -15,5 +16,6 @@ Programmers
 Baekjoon
 -------------
 - 알고리즘으로 분류하여 업데이트
+- java를 이용하여 문제풀이 
 
 [![solved.ac tier](http://mazassumnida.wtf/api/generate_badge?boj=lyr426)](https://solved.ac/lyr426)
