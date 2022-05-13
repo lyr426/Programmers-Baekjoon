@@ -3,12 +3,10 @@ import java.io.*;
 
 public class Main {
 	
-
 	static int N; 
 	static ArrayList<Integer>[] list; 
 	static int[] input, arr; 
 	static boolean[] check; 
-	
 	
 	static void bfs(int start) {
 		Queue<Integer> que  = new LinkedList<>(); 
