@@ -48,7 +48,6 @@ public class Main {
         }
         visit[x][y] = true;
         sand[x][y-1] = 0;
-        System.out.println("spreadSand = " + spreadSand);
         if(y-2>=0){
             sand[x][y-2] = sand[x][y-2] + (originSand-spreadSand);
         }else{
@@ -60,7 +59,6 @@ public class Main {
     public static void upTornado(int x, int y){
         int originSand = sand[x-1][y];
         int spreadSand = 0;
-        System.out.println("originSand = " + originSand);
         if(x-3 >= 0){
             sand[x-3][y] = sand[x-3][y] + (int)((double)originSand*0.05);
             spreadSand = spreadSand + (int)((double)originSand*0.05);
@@ -213,74 +211,33 @@ public class Main {
 
         while(x != 0 || y != 0){
             if(direction == 0) {
-                System.out.println("left");
-                System.out.println("x = " + x);
-                System.out.println("y = " + y);
-
                 leftTornado(x, y);
                 y = y-1;
                 if(x+1<N && visit[x+1][y]==false){
                     direction = 1;
                 }
-
-                for(int i=0; i<N; i++){
-                    for (int j=0; j<N; j++){
-                        System.out.print(sand[i][j]+" ");
-                    }
-                    System.out.println();
-                }
-                System.out.println();
             }
             if(direction == 1) {
-                System.out.println("down");
-                System.out.println("x = " + x);
-                System.out.println("y = " + y);
                 downTornado(x,y);
                 x = x+1;
                 if(y+1<N && visit[x][y+1]==false){
                     direction = 2;
                 }
-                for(int i=0; i<N; i++){
-                    for (int j=0; j<N; j++){
-                        System.out.print(sand[i][j]+" ");
-                    }
-                    System.out.println();
-                }
-                System.out.println();
             }
             if(direction == 2) {
-                System.out.println("right");
-                System.out.println("x = " + x);
-                System.out.println("y = " + y);
                 rightTornado(x,y);
                 y = y+1;
                 if(x-1 >= 0 && visit[x-1][y]==false){
                     direction = 3;
                 }
-                for(int i=0; i<N; i++){
-                    for (int j=0; j<N; j++){
-                        System.out.print(sand[i][j]+" ");
-                    }
-                    System.out.println();
-                }
-                System.out.println();
+
             }
             if(direction == 3) {
-                System.out.println("up");
-                System.out.println("x = " + x);
-                System.out.println("y = " + y);
                 upTornado(x, y);
                 x = x-1;
                 if(y-1>=0 && visit[x][y-1]==false){
                    direction = 0;
                 }
-                for(int i=0; i<N; i++){
-                    for (int j=0; j<N; j++){
-                        System.out.print(sand[i][j]+" ");
-                    }
-                    System.out.println();
-                }
-                System.out.println();
             }
         }
         bufferedWriter.write(String.valueOf(outSand));
