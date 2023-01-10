@@ -1,6 +1,12 @@
 package 인구이동;
+
 import java.io.*;
 import java.util.StringTokenizer;
+
+class Count {
+    int cnt;
+    int total;
+}
 
 public class Main {
 
@@ -33,7 +39,6 @@ public class Main {
 
         while(cnt != 1 && cnt != N*N){
             cnt = comparePeople();
-            movePeople(cnt);
             union = new int[N][N];
             result += 1;
         }
@@ -44,55 +49,45 @@ public class Main {
         bufferedWriter.close();
     }
 
-    private static void movePeople(int cnt) {
-
-        for (int i=1; i<=cnt; i++){
-            int sum = 0;
-            int country = 0;
+    private static void movePeople(int idx, Count count) {
+        int newPopulation = count.total/ count.cnt;
+        for(int i=0; i<N; i++){
             for(int j=0; j<N; j++){
-                for (int k=0; k<N; k++){
-                    if(union[j][k] == i) {
-                        sum += population[j][k];
-                        country += 1;
-                    }
-                }
-            }
-            int newPopulation = sum / country;
-            for(int j=0; j<N; j++){
-                for (int k=0; k<N; k++){
-                    if(union[j][k] == i) {
-                        population[j][k] = newPopulation;
-                    }
+                if(union[i][j] == idx){
+                    population[i][j] = newPopulation;
                 }
             }
         }
-
     }
 
     private static int comparePeople() {
-        int cnt = 0;
+        int idx = 0;
         for(int i=0; i<N; i++){
             for (int j=0; j<N; j++){
                 if(union[i][j] == 0){
-                    dfs(i, j, ++cnt);
+                    Count count = new Count();
+                    bfs(i, j, ++idx, count);
+                    movePeople(idx, count);
                 }
             }
         }
-        return cnt;
+        return idx;
     }
 
-    private static void dfs(int x, int y, int cnt) {
+    private static void bfs(int x, int y, int idx, Count count) {
         int[] dx = {0, -1, 0, 1};
         int[] dy = {-1, 0, 1, 0};
 
-        union[x][y] = cnt;
+        union[x][y] = idx;
+        count.cnt += 1;
+        count.total += population[x][y];
         for(int i=0; i<4; i++){
             int xn = x + dx[i];
             int yn = y + dy[i];
             if(xn>=0 && xn<N && yn>=0 && yn<N){
                 int abs = Math.abs(population[x][y] - population[xn][yn]);
                 if(abs >= L && abs <= R && union[xn][yn] == 0){
-                    dfs(xn,yn,cnt);
+                    bfs(xn,yn, idx, count);
                 }
             }
         }
