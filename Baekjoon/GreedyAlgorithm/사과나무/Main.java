@@ -1,7 +1,6 @@
+package 사과나무;
+
 import java.io.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.StringTokenizer;
 
 public class Main {
@@ -9,43 +8,32 @@ public class Main {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
+
         int N = Integer.parseInt(br.readLine());
-        Integer[] tree = new Integer[N];
         StringTokenizer st = new StringTokenizer(br.readLine(), " ");
 
+        int cnt1 = 0;
+        int cnt2 = 0;
+
         for(int i=0; i<N; i++) {
-            tree[i] = Integer.parseInt(st.nextToken());
+            int height = Integer.parseInt(st.nextToken());
+            cnt2 += height/2;
+            cnt1 += height%2;
         }
-        Arrays.sort(tree, Collections.reverseOrder());
-        boolean answer = true;
-        for(int i=0; i<N; i++){
-            if(tree[i] >= 3){
-                tree[i] = tree[i]%3;
+        boolean answer = false;
+        while (cnt1 <= cnt2){
+            if(cnt1 < cnt2){
+                cnt1 += 2;
+                cnt2 -= 1;
             }
-            if(tree[i] == 0) continue;
-            if(i == N-1){
-                if(tree[i] != 0) answer = false;
-                continue;
-            }
-            if(tree[i] == 1){
-                if(tree[i+1] >= 2){
-                    tree[i+1] -= 2;
-                }else {
-                    answer = false;
-                    break;
-                }
-            }
-            if(tree[i] == 2){
-                if(tree[i+1] >= 1){
-                    tree[i+1] -= 1;
-                }else {
-                    answer = false;
-                    break;
-                }
+            if(cnt1 == cnt2){
+                answer = true;
+                break;
             }
         }
-        if(!answer) bw.write("NO");
-        else bw.write("YES");
+        if(answer) bw.write("YES");
+        else bw.write("NO");
+
         bw.flush();
         bw.close();
     }
