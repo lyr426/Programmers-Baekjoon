@@ -20,19 +20,10 @@ public class Main {
             cnt2 += height/2;
             cnt1 += height%2;
         }
-        boolean answer = false;
-        while (cnt1 <= cnt2){
-            if(cnt1 < cnt2){
-                cnt1 += 2;
-                cnt2 -= 1;
-            }
-            if(cnt1 == cnt2){
-                answer = true;
-                break;
-            }
-        }
-        if(answer) bw.write("YES");
-        else bw.write("NO");
+
+        if( cnt2 - cnt1 >= 0 &&(cnt2 - cnt1)%3 == 0) {
+            bw.write("YES");
+        } else bw.write("NO");
 
         bw.flush();
         bw.close();
