@@ -32,7 +32,9 @@ public class Main {
         int K = Integer.parseInt(st.nextToken());
 
         PriorityQueue<Jewelry> queue = new PriorityQueue<>();
-        ArrayList<Long> bag = new ArrayList<>();
+
+        Comparator<Long> comparator = (o1, o2) -> o1.compareTo(o2);
+        Map<Long, Integer> bag = new HashMap<>();
 
         for (int i=0; i<N; i++){
             st = new StringTokenizer(br.readLine(), " ");
@@ -41,21 +43,23 @@ public class Main {
             queue.offer(new Jewelry(m, v));
         }
         for (int i=0; i<K; i++){
-            bag.add(Long.parseLong(br.readLine()));
+            Long w = Long.parseLong(br.readLine());
+            bag.put(w, bag.getOrDefault(w, 0)+1);
         }
-
-        Collections.sort(bag);
 
         int sum = 0;
         while (!queue.isEmpty()){
             Jewelry jewelry = queue.poll();
-            for (int i=0; i<bag.size(); i++){
-                if(bag.get(i) >= jewelry.weigh){
+            for(Map.Entry<Long, Integer> entry : bag.entrySet()){
+                Long key = entry.getKey();
+                int value = entry.getValue();
+                if(key>= jewelry.weigh && value > 0){
                     sum += jewelry.price;
-                    bag.remove(i);
+                    bag.replace(key, value-1);
                     break;
                 }
             }
+
         }
         bw.write(String.valueOf(sum));
         bw.flush();
