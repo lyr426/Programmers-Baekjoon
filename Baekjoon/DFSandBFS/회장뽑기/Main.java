@@ -13,24 +13,24 @@ public class Main {
 
     private static int bfs(int target) {
 
-        int cnt = 0;
-        boolean[] visit = new boolean[N];
+        int[] visit = new int[N];
         Queue<Integer> queue = new LinkedList<>();
-        visit[target] = true;
+        visit[target] = 0;
         queue.add(target);
 
         while (!queue.isEmpty()){
-            target = queue.remove();
-            boolean flag = false;
-            for(int x: friends[target]){
-                if(visit[x]) continue;
+            int cur = queue.remove();
+            for(int x: friends[cur]){
+                if( x == target || (visit[x] != 0 && visit[x] < visit[cur]+1)) continue; //
                 queue.add(x);
-                visit[x] = true;
-                flag = true;
+                visit[x] = visit[cur]+1;
             }
-            if(flag) cnt++;
         }
-        return cnt;
+        int max = -1;
+        for(int x : visit){
+            if(x > max) max = x;
+        }
+        return max;
     }
 
     public static void main(String[] args) throws IOException {
