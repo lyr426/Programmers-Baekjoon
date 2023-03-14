@@ -9,7 +9,6 @@ public class Main {
     static int M;
     static int cnt;
     static int[][] visit;
-    static int[][] arr;
     static int[] dx = {-1, 0, 1, 0};
     static int[] dy = {0, 1, 0, -1};
 
@@ -21,8 +20,7 @@ public class Main {
         N = Integer.parseInt(st.nextToken());
         M = Integer.parseInt(st.nextToken());
         visit = new int[N][M];
-        arr = new int[N][M];
-        cnt = 0;
+        cnt = 1;
 
         st = new StringTokenizer(br.readLine(), " ");
         int r = Integer.parseInt(st.nextToken());
@@ -33,31 +31,21 @@ public class Main {
             st = new StringTokenizer(br.readLine(), " ");
             for(int j=0; j<M; j++){
                 visit[i][j] = Integer.parseInt(st.nextToken());
+                if(visit[i][j] == 1) visit[i][j] = -1;
             }
         }
         clean(r, c, d);
 
-        for(int i=0; i<N; i++){
-            for(int j=0; j<M; j++){
-                System.out.print(arr[i][j]+ " ");
-            }
-            System.out.println();
-        }
-
-        bw.write(String.valueOf(cnt));
+        bw.write(String.valueOf(cnt-1));
         bw.flush();
         bw.close();
     }
 
     private static void clean(int r, int c, int d) {
-        System.out.println("r = " + r);
-        System.out.println("c = " + c);
-        System.out.println("d = " + d);
-        System.out.println(" ================ " );
+
         if(visit[r][c] == 0) {
-            visit[r][c] = 1;
+            visit[r][c] = cnt;
             cnt += 1;
-            arr[r][c] = cnt;
         }
         boolean flag = check(r, c);
 
@@ -69,13 +57,12 @@ public class Main {
                 if(dr>=0 && dr<N && dc>=0 && dc<M){
                     if(visit[dr][dc] == 0) break;
                 }
-                System.out.println("i = " + i);
             }
             clean(r+dx[d], c+dy[d],d);
         }else{
             int dr = r - dx[d];
             int dc = c - dy[d];
-            if(dr>=0 && dr<N && dc>=0 && dc<M){
+            if(dr>=0 && dr<N && dc>=0 && dc<M && visit[dr][dc] != -1){
                 clean(dr, dc, d);
             }
         }
