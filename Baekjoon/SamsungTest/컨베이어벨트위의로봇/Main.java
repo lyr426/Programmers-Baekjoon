@@ -32,7 +32,7 @@ public class Main {
         }
         int result = 0;
         int cnt = 0;
-        while ( cnt != K ){
+        while ( cnt < K ){
             cnt = 0;
             deque.addFirst(deque.pollLast()); // 1. 2N에 위치한 컨베이어 벨트를 올리는 위치에 둠 (모든 컨베이어 벨트가 한칸씩 이동)
             list.get(N-1).robot = false;
