@@ -23,7 +23,8 @@ public class Main {
         int N = Integer.parseInt(st.nextToken());
         int K = Integer.parseInt(st.nextToken());
 
-        Deque<Pair> deque = new ArrayDeque<>();
+        Deque<Pair> deque = new LinkedList<>();
+        List<Pair> list = (List<Pair>) deque;
 
         st = new StringTokenizer(br.readLine());
         for(int i=0; i<2*N; i++){
@@ -34,22 +35,16 @@ public class Main {
         while ( cnt != K ){
             cnt = 0;
             deque.addFirst(deque.pollLast()); // 1. 2N에 위치한 컨베이어 벨트를 올리는 위치에 둠 (모든 컨베이어 벨트가 한칸씩 이동)
+            list.get(N-1).robot = false;
 
-            System.out.println();
-            for(int i=0; i<2*N; i++){ // 2. 로봇 이동
-                Pair cur = deque.pollLast();
-                if(i == N-1 && cur.robot) { //내리는 위치면 로봇 내리기
-                    cur.robot = false;
-                }else if(cur.robot && !deque.peek().robot && deque.peek().durability > 0 ){ // 로봇이 있으면서 로봇을 이동할 수 있으면
-                    Pair pair = deque.pollFirst();
-                    pair.durability -= 1;
-                    pair.robot = true;
-                    deque.offerFirst(pair);
-                    cur.robot = false;
+            for (int i=N-2; i>=0; i--){
+                if(!list.get(i+1).robot && list.get(i+1).durability > 0 && list.get(i).robot){
+                    list.get(i).robot = false;
+                    list.get(i+1).robot = true;
+                    list.get(i+1).durability -= 1;
                 }
-                deque.offerFirst(cur);
             }
-
+            list.get(N-1).robot = false;
             if(!deque.peek().robot && deque.peek().durability > 0){
                 Pair pair = deque.pollFirst();
                 pair.robot = true;
@@ -59,12 +54,10 @@ public class Main {
             for(Pair pair : deque){
                 if(pair.durability == 0) cnt++;
             }
-
             result++;
         }
         bw.write(String.valueOf(result));
         bw.flush();
         bw.close();
-
     }
 }
