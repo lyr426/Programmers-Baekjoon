@@ -1,4 +1,4 @@
-package com.example.demo2.경사로;
+package 경사로;
 
 import java.io.*;
 import java.util.StringTokenizer;

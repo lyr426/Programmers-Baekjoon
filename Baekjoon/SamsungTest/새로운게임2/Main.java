@@ -1,4 +1,4 @@
-package com.example.demo2.test;
+package 새로운게임2;
 
 import java.io.*;
 import java.util.ArrayList;
