@@ -8,7 +8,6 @@
       <sourceFolder url="file://$MODULE_DIR$/DFSandBFS" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/DynamicProgramming" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/GreedyAlgorithm" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/Heap" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/PriorityQueue" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Queue" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/SamsungTest" isTestSource="false" />
@@ -16,6 +15,7 @@
       <sourceFolder url="file://$MODULE_DIR$/StringAlgorithm" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/etc" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Map" isTestSource="false" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
