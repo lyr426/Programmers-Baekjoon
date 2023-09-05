@@ -1,6 +1,7 @@
 package 두동전;
 
 import java.io.*;
+import java.util.HashSet;
 import java.util.StringTokenizer;
 
 class Position{
@@ -21,8 +22,13 @@ public class Main {
     static int min = Integer.MAX_VALUE;
     static int[] dx = {-1, 0, 0, 1};
     static int[] dy = {0, -1, 1, 0};
+    private static HashSet<String> visited = new HashSet<>();
     private static void bruteForce(Position[] coin, int cnt) {
-        if(cnt >= min || cnt >= 10) return;
+        String coinsKey = coin[0].x + "," + coin[0].y + ";" + coin[1].x + "," + coin[1].y;
+        visited.add(coinsKey);
+        if(cnt >= 10) {
+            return;
+        }
         int drop = 0;
         for(int i=0; i<2; i++) {
             if(coin[i].x < 0 || coin[i].x >= N || coin[i].y < 0 || coin[i].y >= M){
@@ -31,8 +37,12 @@ public class Main {
         }
         if(drop == 1) {
             min = Math.min(min, cnt);
+//            System.out.println(coin[0].x + "," + coin[0].y + ";" + coin[1].x + "," + coin[1].y);
             return;
-        }else if(drop == 2) return;
+        }else if(drop == 2) {
+            return;
+        }
+
 
         for(int i=0; i<4; i++) {
             Position[] moveCoin = new Position[2];
@@ -45,7 +55,11 @@ public class Main {
                 }
                 moveCoin[j] = board[xn][yn] == 1 ? new Position(coin[j].x, coin[j].y) : new Position(xn, yn);
             }
-            bruteForce(moveCoin, cnt +1);
+            String newCoinsKey = moveCoin[0].x + "," + moveCoin[0].y + ";" + moveCoin[1].x + "," + moveCoin[1].y;
+            if (!visited.contains(newCoinsKey)) {
+//                System.out.println("coinsKey = " + coinsKey);
+                bruteForce(moveCoin, cnt + 1);
+            }
         }
 
     }
