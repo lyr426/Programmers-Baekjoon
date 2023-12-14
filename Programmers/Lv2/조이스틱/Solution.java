@@ -3,24 +3,20 @@ package 조이스틱;
 class Solution {
     public int solution(String name) {
         int answer = 0;
-      char[] nameChar = name.toCharArray();
-        int len = nameChar.length;
-        int idx=0, cnt =0;
+        char[] nameArr = name.toCharArray();
+        int len = name.length();
+        int minRoute = len - 1;
         for(int i=0; i<len; i++){
-            if(i>0 &&nameChar[i] == 'A'){
-                cnt++;
-                if(i==len-1) answer-=cnt;
-                if(i+1<len && nameChar[i+1]!='A' && cnt>idx) answer = answer-cnt+idx;
-                continue;
+            int num = Math.min((int)(nameArr[i]-'A'), (int)('Z' - nameArr[i] + 1));
+            int idx = i + 1;
+            while(idx < len && nameArr[idx] == 'A') {
+                idx += 1;
             }
-            idx = i; cnt =0;
-            if(nameChar[i]<='N'){
-                answer += (int)nameChar[i]-(int)'A';
-                continue;
-            }
-            answer += (int)'Z' - (int)nameChar[i] +1;
+            minRoute = Math.min(minRoute, i*2 + len - idx);
+            minRoute = Math.min(minRoute, (len-idx)*2 + i);
+            answer += num;
         }
-        answer += len-1;
+        answer += minRoute;
         return answer;
     }
 }
