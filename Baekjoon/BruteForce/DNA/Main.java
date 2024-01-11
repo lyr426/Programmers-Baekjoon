@@ -35,6 +35,7 @@ public class Main {
             s += str;
             total += min;
         }
+
         bw.write(s+"\n");
         bw.write(String.valueOf(total));
         bw.flush();
