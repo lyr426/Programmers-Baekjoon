@@ -3,6 +3,9 @@ package 이차원배열과연산;
 import java.io.*;
 import java.util.*;
 
+import java.io.*;
+import java.util.*;
+
 public class Main {
 
 
@@ -35,9 +38,9 @@ public class Main {
                 break;
             }
             if(row >= col){
-               col = RowOperation(row, col, A);
+                col = RowOperation(row, col, A);
             } else {
-               row = ColOperations(row, col, A);
+                row = ColOperations(row, col, A);
             }
 //            for(int m=0; m<row; m++){
 //                for(int j=0; j<col; j++){
@@ -57,7 +60,7 @@ public class Main {
     }
 
     private static int ColOperations(int row, int col, int[][] A) {
-        HashMap<Integer, Integer> countNum = new HashMap<>();
+        HashMap<Integer, Integer> countNum;
         int maxRow = -1;
         for(int i=0; i<col; i++){
             countNum = new HashMap<>();
@@ -67,11 +70,11 @@ public class Main {
             }
             int num = 0;
             List<Map.Entry<Integer, Integer>> list = new LinkedList<>(countNum.entrySet());
-            Collections.sort(list, new Comparator<Map.Entry<Integer, Integer>>() {
-                @Override
-                public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
-                    return o1.getValue().compareTo(o2.getValue());
+            Collections.sort(list, (o1, o2) -> {
+                if (o1.getValue() == o2.getValue()) {
+                    return o1.getKey().compareTo(o2.getKey());
                 }
+                return o1.getValue().compareTo(o2.getValue());
             });
             for(Map.Entry<Integer, Integer> entry : list){
                 A[num][i] = entry.getKey();
@@ -93,7 +96,7 @@ public class Main {
     }
 
     private static int RowOperation(int row, int col, int[][] A) {
-        HashMap<Integer, Integer> countNum = new HashMap<>();
+        HashMap<Integer, Integer> countNum;
         int maxCol = -1;
         for(int i=0; i<row; i++){
             countNum = new HashMap<>();
@@ -103,11 +106,11 @@ public class Main {
             }
             int num = 0;
             List<Map.Entry<Integer, Integer>> list = new LinkedList<>(countNum.entrySet());
-            Collections.sort(list, new Comparator<Map.Entry<Integer, Integer>>() {
-                @Override
-                public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
-                    return o1.getValue().compareTo(o2.getValue());
+            Collections.sort(list, (o1, o2) -> {
+                if (o1.getValue() == o2.getValue()) {
+                    return o1.getKey().compareTo(o2.getKey());
                 }
+                return o1.getValue().compareTo(o2.getValue());
             });
             for(Map.Entry<Integer, Integer> entry : list){
                 A[i][num] = entry.getKey();
