@@ -8,13 +8,13 @@ import java.util.StringTokenizer;
 
 class FireBall{
     int m; //질량
-    int d; //방향
     int s; //속도
+    int d; //방향
 
-    FireBall(int m, int d, int s){
+    FireBall(int m, int s, int d){
         this.m = m;
-        this.d = d;
         this.s = s;
+        this.d = d;
     }
 }
 
@@ -40,15 +40,12 @@ public class Main {
         }
 
         for(int i=0; i<K; i++){
-            sumMass(board);
-
             board = moveFireBall(board);
             eventFireBall(board);
-//            sumMass(board);
         }
 
-//        int sumM = sumMass(board);
-//        bw.write(String.valueOf(sumM));;
+        int sumM = sumMass(board);
+        bw.write(String.valueOf(sumM));;
         bw.flush();
     }
 
@@ -56,16 +53,15 @@ public class Main {
         int sum = 0;
         for(int i=0; i<N; i++) {
             for(int j=0; j<N; j++){
-                int k = 0;
-                while(board[i][j].size() != 0) {
-                    FireBall fireBall = board[i][j].remove(0);
+                int t = 0;
+                while(board[i][j].size() > t) {
+                    FireBall fireBall = board[i][j].get(t);
                     sum += fireBall.m;
-                    k = fireBall.m;
+                    t+=1;
                 }
-                System.out.print(k + " ");
             }
-            System.out.println();
         }
+
         return sum;
     }
 
@@ -82,17 +78,19 @@ public class Main {
     private static List<FireBall>[][] moveFireBall(List<FireBall>[][] board) {
         List<FireBall>[][] newBoard = boardMaker();
         int dx[] = {-1, -1, 0, 1, 1, 1, 0, -1};
-        int dy[] = {1, 1, 1, 0, -1, -1, -1, 0};
+        int dy[] = {0, 1, 1, 1, 0, -1, -1, -1};
 
         for(int i=0; i<N; i++) {
             for(int j=0; j<N; j++){
                 while (board[i][j].size() != 0) {
                     FireBall fireBall = board[i][j].remove(0);
-                    int xn = i + fireBall.d * fireBall.s;
-                    int yn = j + fireBall.d * fireBall.s;
-                    if(xn < 0 || xn >= N || yn < 0 || yn >= N) {
-                        continue;
-                    }
+                    int xn = i + dx[fireBall.d] * fireBall.s;
+                    int yn = j + dy[fireBall.d] * fireBall.s;
+                    xn = xn >= N ? xn % N :xn;
+                    xn = xn % N < 0 ?  xn % N + N : xn % N;
+                    yn = yn >= N ? yn % N :yn;
+                    yn = yn % N < 0 ?  yn % N + N : yn % N;
+
                     newBoard[xn][yn].add(fireBall);
                 }
             }
@@ -121,7 +119,7 @@ public class Main {
                 sumS = sumS/size;
                 int[] dirs = ( dir == 0 || dir == size) ? new int[]{0, 2, 4, 6} : new int[]{1, 3, 5, 7} ;
                 for(int k=0; k<4; k++){
-                    board[i][j].add(new FireBall(sumM,  dirs[i], sumS));
+                    board[i][j].add(new FireBall(sumM,  sumS, dirs[k]));
                 }
             }
         }
