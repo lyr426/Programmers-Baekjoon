@@ -41,7 +41,6 @@ public class Main {
         N = Integer.parseInt(st.nextToken()); // 격자 크기
         int M = Integer.parseInt(st.nextToken()); // 상어 마릿수
         K = Integer.parseInt(st.nextToken()); // 냄새 유지시간
-        HashMap<Integer, Position> map = new HashMap<>();
 
         Shark[][] sea = new Shark[N][N];
         sharkDir = new int[M+1];
@@ -71,8 +70,13 @@ public class Main {
 
         int res = 0;
 
-        while (res < 1000) {
+        while (res <= 1000) {
 
+            if(check(sea)){
+                break;
+            }
+
+            HashMap<Integer, Position> map = new HashMap<>();
             for(int i=0; i<N; i++){
                 for(int j=0; j<N; j++) {
                     if(sea[i][j] == null || sea[i][j].smell != K) continue;
@@ -80,20 +84,21 @@ public class Main {
                     sharkDir[sea[i][j].num] = dir;
                     int xn = i + dx[dir];
                     int yn = j + dy[dir];
-                    if(sea[xn][yn] != null && sea[xn][yn].num < sea[i][j].num ) continue;
-                    sea[i+dx[dir]][j+dy[dir]] = new Shark(K+1, sea[i][j].num);
+                    map.put(sea[i][j].num, new Position(xn, yn));
                 }
             }
-            smellRemove(sea);
-            print(sea);
-            res += 1;
 
-            if(check(sea)){
-                break;
+            for(int num : map.keySet()){
+                Position position = map.get(num);
+                if(sea[position.x][position.y] != null && sea[position.x][position.y].num < num) continue;
+                sea[position.x][position.y] = new Shark(K+1, num);
             }
+
+            smellRemove(sea);
+            res += 1;
         }
 
-        res = res >= 1000 ? -1 : res;
+        res = res > 1000 ? -1 : res;
         bw.write(String.valueOf(res));
         bw.flush();
 
@@ -121,7 +126,7 @@ public class Main {
             int xn = x + dx[dn];
             int yn = y + dy[dn];
 
-            if(xn >= 0 && xn < N && yn >= 0 && yn < N && (sea[xn][yn] == null || (sea[xn][yn] != null && sea[xn][yn].smell == K+1 ))) {
+            if(xn >= 0 && xn < N && yn >= 0 && yn < N && sea[xn][yn] == null ) {
                 return dn;
             }
         }
@@ -134,7 +139,6 @@ public class Main {
                 return dn;
             }
         }
-        System.out.println(">?");
         return dir;
     }
 
@@ -151,28 +155,4 @@ public class Main {
 
     }
 
-    private static void print(Shark[][] sea) {
-
-        System.out.println("현재 상어 위치 ");
-
-        for(int i=0; i<N; i++){
-            for(int j=0; j<N; j++){
-                int x = sea[i][j] == null ? 0 : ( sea[i][j].smell == K ? sea[i][j].num : 0);
-                System.out.print(x + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-
-        System.out.println("냄새현황");
-
-        for(int i=0; i<N; i++){
-            for(int j=0; j<N; j++){
-                int x = sea[i][j] == null ? 0 : sea[i][j].smell;
-                System.out.print(x + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-    }
 }
