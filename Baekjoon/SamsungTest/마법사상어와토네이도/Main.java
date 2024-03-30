@@ -6,188 +6,12 @@ import java.util.StringTokenizer;
 public class Main {
 
 
-    public static int N;
-    public static boolean[][] visit;
-    public static int[][] sand;
-    public static int outSand = 0;
-
-    public static void leftTornado(int x, int y){
-        int originSand = sand[x][y-1];
-        int spreadSand = 0;
-        if(y-3 >= 0){
-            sand[x][y-3] = sand[x][y-3] + (int)((double)originSand*0.05);
-            spreadSand = spreadSand + (int)((double)originSand*0.05);
-        }
-        if(y-2 >= 0){
-            if(x-1>=0){
-                sand[x-1][y-2] = sand[x-1][y-2] + (int)((double)originSand*0.1);
-                spreadSand = spreadSand + (int)((double)originSand*0.1);
-            }
-            if(x+1<N){
-                sand[x+1][y-2] = sand[x+1][y-2] + (int)((double)originSand*0.1);
-                spreadSand = spreadSand + (int)((double)originSand*0.1);
-            }
-        }
-        if(x-2>=0){
-            sand[x-2][y-1] = sand[x-2][y-1] + (int)((double)originSand*0.02);
-            spreadSand = spreadSand + (int)((double)originSand*0.02);
-        }
-        if(x+2<N){
-            sand[x+2][y-1] = sand[x+2][y-1] + (int)((double)originSand*0.02);
-            spreadSand = spreadSand + (int)((double)originSand*0.02);
-        }
-        if(x-1>=0){
-            sand[x-1][y-1] = sand[x-1][y-1] + (int)((double)originSand*0.07);
-            sand[x-1][y] = sand[x-1][y] + (int)((double)originSand*0.01);
-            spreadSand = spreadSand + (int)((double)originSand*0.08);
-        }
-        if(x+1<N){
-            sand[x+1][y-1] = sand[x+1][y-1] + (int)((double)originSand*0.07);
-            sand[x+1][y] = sand[x+1][y] + (int)((double)originSand*0.01);
-            spreadSand = spreadSand + (int)((double)originSand*0.08);
-        }
-        visit[x][y] = true;
-        sand[x][y-1] = 0;
-        if(y-2>=0){
-            sand[x][y-2] = sand[x][y-2] + (originSand-spreadSand);
-        }else{
-            outSand = outSand + (originSand-spreadSand);
-        }
-
-    }
-
-    public static void upTornado(int x, int y){
-        int originSand = sand[x-1][y];
-        int spreadSand = 0;
-        if(x-3 >= 0){
-            sand[x-3][y] = sand[x-3][y] + (int)((double)originSand*0.05);
-            spreadSand = spreadSand + (int)((double)originSand*0.05);
-        }
-        if(x-2 >= 0){
-            if(y-1>=0){
-                sand[x-2][y-1] = sand[x-2][y-1] + (int)((double)originSand*0.1);
-                spreadSand = spreadSand + (int)((double)originSand*0.1);
-            }
-            if(y+1<N){
-                sand[x-2][y+1] = sand[x-2][y+1] + (int)((double)originSand*0.1);
-                spreadSand = spreadSand + (int)((double)originSand*0.1);
-            }
-        }
-        if(y-2>=0) {
-            sand[x - 1][y - 2] = sand[x - 1][y - 2] + (int) ((double) originSand * 0.02);
-            spreadSand = spreadSand + (int)((double)originSand*0.02);
-        }
-        if(y+2<N){
-            sand[x-1][y+2] = sand[x-1][y+2] + (int)((double)originSand*0.02);
-            spreadSand = spreadSand + (int)((double)originSand*0.02);
-        }
-        if(y-1>=0){
-            sand[x-1][y-1] = sand[x-1][y-1] + (int)((double)originSand*0.07);
-            sand[x][y-1] = sand[x][y] + (int)((double)originSand*0.01);
-            spreadSand = spreadSand + (int)((double)originSand*0.08);
-        }
-        if(y+1<N){
-            sand[x-1][y+1] = sand[x+1][y-1] + (int)((double)originSand*0.07);
-            sand[x][y+1] = sand[x+1][y] + (int)((double)originSand*0.01);
-            spreadSand = spreadSand + (int)((double)originSand*0.08);
-        }
-        visit[x][y] = true;
-        sand[x-1][y] = 0;
-        if(x-2>=0){
-            sand[x-2][y] = sand[x-2][y] + (originSand-spreadSand);
-        }else{
-            outSand = outSand + (originSand-spreadSand);
-        }
-    }
-
-    public static void rightTornado(int x, int y){
-        int originSand = sand[x][y+1];
-        int spreadSand = 0;
-        if(y+3 < N){
-            sand[x][y+3] = sand[x][y+3] + (int)((double)originSand*0.05);
-            spreadSand = spreadSand + (int)((double)originSand*0.05);
-        }
-        if(y+2 < N){
-            if(x-1>=0){
-                sand[x-1][y+2] = sand[x-1][y+2] + (int)((double)originSand*0.1);
-                spreadSand = spreadSand + (int)((double)originSand*0.1);
-            }
-            if(x+1<N){
-                sand[x+1][y+2] = sand[x+1][y+2] + (int)((double)originSand*0.1);
-                spreadSand = spreadSand + (int)((double)originSand*0.01);
-            }
-        }
-        if(x-2>=0){
-            sand[x-2][y+1] = sand[x-2][y+1] + (int)((double)originSand*0.02);
-            spreadSand = spreadSand + (int)((double)originSand*0.02);
-        }
-        if(x+2<N){
-            sand[x+2][y+1] = sand[x+2][y+1] + (int)((double)originSand*0.02);
-            spreadSand = spreadSand + (int)((double)originSand*0.02);
-        }
-        if(x-1>=0){
-            sand[x-1][y+1] = sand[x-1][y+1] + (int)((double)originSand*0.07);
-            sand[x-1][y] = sand[x-1][y] + (int)((double)originSand*0.01);
-            spreadSand = spreadSand + (int)((double)originSand*0.08);
-        }
-        if(x+1<N){
-            sand[x+1][y+1] = sand[x+1][y+1] + (int)((double)originSand*0.07);
-            sand[x+1][y] = sand[x+1][y] + (int)((double)originSand*0.01);
-            spreadSand = spreadSand + (int)((double)originSand*0.08);
-        }
-        visit[x][y] = true;
-        sand[x][y+1] = 0;
-        if(y+2<N){
-            sand[x][y+2] = sand[x][y+2] + (originSand-spreadSand);
-        }else{
-            outSand = outSand + (originSand-spreadSand);
-        }
-    }
-
-    public static void downTornado(int x, int y){
-        int originSand = sand[x+1][y];
-        int spreadSand = 0;
-        if(x+3 < N){
-            sand[x+3][y] = sand[x+3][y] + (int)((double)originSand*0.05);
-            spreadSand = spreadSand + (int)((double)originSand*0.05);
-        }
-        if(x+2 < N){
-            if(y-1>=0){
-                sand[x+2][y-1] = sand[x+2][y-1] + (int)((double)originSand*0.1);
-                spreadSand = spreadSand + (int)((double)originSand*0.1);
-            }
-            if(y+1<N){
-                sand[x+2][y+1] = sand[x+2][y+1] + (int)((double)originSand*0.1);
-                spreadSand = spreadSand + (int)((double)originSand*0.1);
-            }
-        }
-        if(y-2>=0){
-            sand[x+1][y-2] = sand[x+1][y-2] + (int)((double)originSand*0.02);
-            spreadSand = spreadSand + (int)((double)originSand*0.02);
-        }
-        if(y+2<N){
-            sand[x+1][y+2] = sand[x+1][y+2] + (int)((double)originSand*0.02);
-            spreadSand = spreadSand + (int)((double)originSand*0.02);
-        }
-        if(y-1>=0){
-            sand[x+1][y-1] = sand[x+1][y-1] + (int)((double)originSand*0.07);
-            sand[x][y-1] = sand[x][y-1] + (int)((double)originSand*0.01);
-            spreadSand = spreadSand + (int)((double)originSand*0.08);
-        }
-        if(y+1<N){
-            sand[x+1][y+1] = sand[x+1][y+1] + (int)((double)originSand*0.07);
-            sand[x][y+1] = sand[x][y+1] + (int)((double)originSand*0.01);
-            spreadSand = spreadSand + (int)((double)originSand*0.08);
-        }
-        visit[x][y] = true;
-        sand[x+1][y] = 0;
-        if(x+2<N){
-            sand[x+2][y] = sand[x+2][y] + (originSand-spreadSand);
-        }else{
-            outSand = outSand + (originSand-spreadSand);
-        }
-    }
-
+    static int N;
+    static boolean[][] visit;
+    static int[][] sand;
+    static int outSand = 0;
+    static int[] dx = {0, 1, 0, -1};
+    static int[] dy = {-1, 0, 1, 0};
 
     public static void main(String args[]) throws IOException {
 
@@ -204,45 +28,80 @@ public class Main {
                 sand[i][j] = Integer.parseInt(st.nextToken());
             }
         }
+        int curX = N/2;
+        int curY = N/2;
+        int dir = 0;
+        int repeat = 1;
 
-        int direction = 0;
-        int x = N/2;
-        int y = N/2;
+        while(curX != 0 || curY != 0) {
 
-        while(x != 0 || y != 0){
-            if(direction == 0) {
-                leftTornado(x, y);
-                y = y-1;
-                if(x+1<N && visit[x+1][y]==false){
-                    direction = 1;
+            for(int i=0; i<2; i++) {
+                for(int j=0; j<repeat; j++) {
+                    if(curX <= 0 && curY <= 0) break;
+                    tornado(dir, curX, curY);
+                    curX += dx[dir];
+                    curY += dy[dir];
                 }
+                dir = (dir + 1) % 4;
             }
-            if(direction == 1) {
-                downTornado(x,y);
-                x = x+1;
-                if(y+1<N && visit[x][y+1]==false){
-                    direction = 2;
-                }
-            }
-            if(direction == 2) {
-                rightTornado(x,y);
-                y = y+1;
-                if(x-1 >= 0 && visit[x-1][y]==false){
-                    direction = 3;
-                }
 
-            }
-            if(direction == 3) {
-                upTornado(x, y);
-                x = x-1;
-                if(y-1>=0 && visit[x][y-1]==false){
-                   direction = 0;
-                }
-            }
+            repeat += 1;
         }
-        bufferedWriter.write(String.valueOf(outSand));
 
+        bufferedWriter.write(String.valueOf(outSand));
         bufferedWriter.flush();
 
+    }
+
+    private static void tornado(int dir, int x, int y) {
+
+        int[][] moveX = {{-1, 1, -2, 2, -1, 1, -1, 1, 0},   //좌
+                         { 0, 0, 1, 1, 1, 1, 2, 2, 3},      //하
+                         {-1, 1, -2, 2, -1, 1, -1, 1, 0},   //우
+                         {0, 0, -1, -1, -1, -1, -2, -2, -3} //상
+        };
+        int[][] moveY = {{0, 0, -1, -1, -1, -1, -2, -2, -3},
+                         {-1, 1, -2, 2, -1, 1, -1, 1, 0},
+                         {0, 0, 1, 1, 1, 1, 2, 2, 3},
+                         {-1, 1, -2, 2, -1, 1, -1, 1, 0}};
+        double[] ratio = {0.01, 0.01, 0.02, 0.02, 0.07, 0.07, 0.1, 0.1, 0.05};
+
+        int xn = x + dx[dir];
+        int yn = y + dy[dir];
+        int curSand = sand[xn][yn];
+
+        for(int i=0; i<9; i++) {
+            int curX = x + moveX[dir][i];
+            int curY = y + moveY[dir][i];
+
+            int sandRatio = (int)(curSand * ratio[i]);
+            sand[xn][yn] -= sandRatio;
+            if(curX < 0 || curX >= N || curY < 0 || curY >=N){
+                outSand += sandRatio;
+                continue;
+            }
+            sand[curX][curY] += sandRatio;
+        }
+        int xn2 = xn + dx[dir];
+        int yn2 = yn + dy[dir];
+
+        if(xn2 < 0 || xn2 >= N || yn2 < 0 || yn2 >= N) {
+            outSand += sand[xn][yn];
+            sand[xn][yn] = 0;
+            return;
+        }
+        sand[xn2][yn2] += sand[xn][yn];
+        sand[xn][yn] = 0;
+
+    }
+
+    static void print(){
+        for(int i=0; i<N; i++) {
+            for(int j=0; j<N; j++){
+                System.out.print(sand[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 }
