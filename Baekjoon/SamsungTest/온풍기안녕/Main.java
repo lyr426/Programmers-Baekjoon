@@ -32,6 +32,7 @@ public class Main {
     static int[][] dy = {{1, 1, 1}, {-1, -1, -1}, {-1, 0, 1}, {-1, 0, 1}};
     static int R;
     static int C;
+    static HashSet<Wall> walls = new HashSet<>();
 
     public static void main(String[] args) throws IOException{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
@@ -45,7 +46,6 @@ public class Main {
         int[][] area = new int[R][C];
         HashSet<Position> heaters = new HashSet<>();
         HashSet<Position> checkPosition = new HashSet<>();
-        HashSet<Wall> walls = new HashSet<>();
 
         for(int i=0; i<R; i++) {
             st = new StringTokenizer(br.readLine()," ");
@@ -77,11 +77,11 @@ public class Main {
         int chocolate = 0;
 
         while (chocolate <= 100) {
-            heating(area, heaters, walls);
+            heating(area, heaters);
             System.out.println("heating=====");
             print(area);
             System.out.println("control Temp ======");
-            controlTemp(area, walls);
+            controlTemp(area);
             print(area);
 
             System.out.println("outside Temp =======");
@@ -133,17 +133,17 @@ public class Main {
 
     }
 
-    private static void controlTemp(int[][] area, HashSet<Wall> walls) {
+    private static void controlTemp(int[][] area) {
         int[][] temp = new int[R][C];
         for(int i=0; i<R; i++){
             for(int j=0; j<C; j++){
-                if( j+1 < C && wallCheck(0, i, j+1, walls) && area[i][j] != area[i][j+1]){
+                if( j+1 < C && !containWall( i, j+0.5) && area[i][j] != area[i][j+1]){
                     int num = Math.abs(area[i][j] - area[i][j+1]) / 4;
                     temp[i][j] = area[i][j] > area[i][j + 1] ? temp[i][j] - num : temp[i][j] + num;
                     temp[i][j + 1] = area[i][j] > area[i][j + 1] ? temp[i][j + 1] + num : temp[i][j + 1] - num;
                 }
 
-                if( i+1 < R && wallCheck(3, i+1, j, walls) && area[i][j] != area[i+1][j]){
+                if( i+1 < R && !containWall( i+0.5, j) && area[i][j] != area[i+1][j]){
                     int num = Math.abs(area[i][j] - area[i+1][j]) / 4;
                     temp[i][j] = area[i][j] > area[i + 1][j] ? temp[i][j] - num : temp[i][j] + num;
                     temp[i+1][j] = area[i][j] > area[i + 1][j] ? temp[i + 1][j] + num : temp[i + 1][j] - num;
@@ -158,7 +158,7 @@ public class Main {
 
     }
 
-    private static void heating(int[][] area, HashSet<Position> heaters, HashSet<Wall> walls) {
+    private static void heating(int[][] area, HashSet<Position> heaters) {
 
         for(Position heater : heaters) {
             boolean[][] visit = new boolean[R][C];
@@ -166,11 +166,11 @@ public class Main {
             int xn = heater.x + dx[dir][1];
             int yn = heater.y + dy[dir][1];
             visit[xn][yn] = true;
-            dfs(area, visit, xn, yn, walls, dir, 5);
+            dfs(area, visit, xn, yn, dir, 5);
         }
     }
 
-    private static void dfs(int[][] area, boolean[][] visit, int x, int y, HashSet<Wall> walls, int dir, int depth) {
+    private static void dfs(int[][] area, boolean[][] visit, int x, int y, int dir, int depth) {
         area[x][y] += depth;
         if(depth == 1) {
             return;
@@ -179,25 +179,51 @@ public class Main {
         for(int i=0; i<3; i++) {
             int xn = x + dx[dir][i];
             int yn = y + dy[dir][i];
-            if(xn < 0 || xn >= R || yn < 0 || yn >= C || visit[xn][yn] || !wallCheck(dir, xn, yn, walls)){
+            if(xn < 0 || xn >= R || yn < 0 || yn >= C || visit[xn][yn] || !wallCheck(dir, xn, yn)){
                 continue;
             }
+
+            if(!wallCheck(x, y, xn, yn)){
+                continue;
+            }
+
             visit[xn][yn] = true;
-            dfs(area, visit, xn, yn, walls, dir, depth - 1);
+            dfs(area, visit, xn, yn, dir, depth - 1);
         }
     }
 
-    private static boolean wallCheck(int dir, double x, double y, HashSet<Wall> walls) {
-
-        x = (dir > 1) ? (dir == 2 ? x + 0.5 : x - 0.5) : x;
-        y = (dir < 2) ? (dir == 0 ? y - 0.5 : y + 0.5) : y;
-
-        for(Wall wall : walls) {
-            if(wall.x == x && wall.y == y) {
-                return false;
-            }
+    private static boolean wallCheck(double x, double y, double xn, double yn) {
+        if(containWall(x,y-0.5) && containWall(x-0.5, y) && x - 1 == xn && y - 1 == yn) {
+            return false;
+        }
+        if(containWall(x-0.5, y) && containWall(x, y + 0.5) && x-1 == xn && y + 1 == yn) {
+            return false;
+        }
+        if(containWall(x, y+0.5) && containWall(x+0.5, y) && x+1 == xn && y+1 == yn) {
+            return false;
+        }
+        if(containWall(x+0.5, y) && containWall(x, y-0.5) && x+1 == xn && y-1 == yn) {
+            return false;
         }
 
+        return true;
+    }
+
+    private static boolean containWall(double x, double y) {
+        for(Wall wall : walls) {
+            if(wall.x == x && wall.y == y) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean wallCheck(int dir, double x, double y) {
+
+        x = (dir > 1) ? (dir == 2 ? x + 0.5 : x - 0.5) : x; // 위, 아래
+        y = (dir < 2) ? (dir == 0 ? y - 0.5 : y + 0.5) : y; // 오, 왼
+
+        if(containWall(x, y)) return false;
         return true;
     }
 }
