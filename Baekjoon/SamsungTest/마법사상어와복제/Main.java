@@ -1,9 +1,7 @@
 package 마법사상어와복제;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
 
 
 class Position{
@@ -21,7 +19,7 @@ public class Main {
         BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
 
         int[][] smell = new int[N][N];
-        List<Integer>[][] fish = addList();
+        Queue<Integer>[][] fish = addList();
         StringTokenizer st = new StringTokenizer(br.readLine()," ");
         int M = Integer.parseInt(st.nextToken());
         int S = Integer.parseInt(st.nextToken());
@@ -38,34 +36,13 @@ public class Main {
         int sharkY = Integer.parseInt(st.nextToken())-1;
 
         for(int i=0; i<S; i++) {
-            System.out.println(i + " 번째 =============");
-            List<Integer>[][] clonedFish = cloneFish(fish);
-            System.out.println("현재 물고기 갯수 : " + allFish(fish));
-            System.out.println("*움직이기 전 위치 별 물고기 개수*");
-            for(int p=0; p<N; p++){
-                for(int q=0; q<N; q++){
-                    System.out.print(fish[p][q].size()+ " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
+            Queue<Integer>[][] clonedFish = cloneFish(fish);
             fish = moveFish(fish, smell, sharkX, sharkY);
-            System.out.println("*움직인 후 위치 별 물고기 개수*");
-            for(int p=0; p<N; p++){
-                for(int q=0; q<N; q++){
-                    System.out.print(fish[p][q].size()+ " ");
-                }
-                System.out.println();
-            }
-            System.out.println();
-
             Position position = moveShark(fish, smell, sharkX, sharkY);
-            System.out.println("상어가 먹고 난 후 물고기 갯수 : " + allFish(fish));
             sharkX = position.x;
             sharkY = position.y;
             smellDecrease(smell);
             fishClone(fish, clonedFish);
-            System.out.println("물고기 복제 후 : " + allFish(fish));
         }
 
         int cnt = allFish(fish);
@@ -73,7 +50,7 @@ public class Main {
         bw.flush();
     }
 
-    private static int allFish(List<Integer>[][] fish) {
+    private static int allFish(Queue<Integer>[][] fish) {
         int cnt = 0;
         for(int i=0; i<N; i++){
             for(int j=0; j<N; j++){
@@ -84,12 +61,12 @@ public class Main {
         return cnt;
     }
 
-    private static void fishClone(List<Integer>[][] fish, List<Integer>[][] clonedFish) {
+    private static void fishClone(Queue<Integer>[][] fish, Queue<Integer>[][] clonedFish) {
 
         for(int i=0; i<N; i++) {
             for(int j=0; j<N; j++) {
                 while (!clonedFish[i][j].isEmpty()) {
-                    int dir = clonedFish[i][j].remove(0);
+                    int dir = clonedFish[i][j].remove();
                     fish[i][j].add(dir);
                 }
             }
@@ -106,11 +83,10 @@ public class Main {
         }
     }
 
-    private static Position moveShark(List<Integer>[][] fish, int[][] smell, int sharkX, int sharkY) {
+    private static Position moveShark(Queue<Integer>[][] fish, int[][] smell, int sharkX, int sharkY) {
         int[] dx = {-1, 0, 1, 0};
         int[] dy = {0, -1, 0, 1};
 
-        System.out.println("현재 상어 위치 => x :" + sharkX + " y : " + sharkY);
         int[] max = {0, 0, 0};
         int maxCnt = Integer.MIN_VALUE;
         for(int i=0; i<4; i++){
@@ -126,7 +102,6 @@ public class Main {
                 }
             }
         }
-        System.out.println("잡힌 물고기 : " + maxCnt);
 
         for(int i=0; i<3; i++) {
             sharkX += dx[max[i]];
@@ -140,7 +115,7 @@ public class Main {
         return new Position(sharkX, sharkY);
     }
 
-    private static int fishCnt(List<Integer>[][] fish, int sharkX, int sharkY, int[] dirs) {
+    private static int fishCnt(Queue<Integer>[][] fish, int sharkX, int sharkY, int[] dirs) {
         int[] dx = {-1, 0, 1, 0};
         int[] dy = {0, -1, 0, 1};
         int cnt = 0;
@@ -161,25 +136,25 @@ public class Main {
         return cnt;
     }
 
-    private static List<Integer>[][] addList() {
-        List<Integer>[][] fish = new List[N][N];
+    private static Queue<Integer>[][] addList() {
+        Queue<Integer>[][] fish = new Queue[N][N];
         for(int i=0; i<N; i++){
             for(int j=0; j<N; j++) {
-                fish[i][j] = new ArrayList<>();
+                fish[i][j] = new LinkedList<>();
             }
         }
         return fish;
     }
 
-    private static List<Integer>[][] moveFish(List<Integer>[][] fish, int[][] smell, int sharkX, int sharkY) {
+    private static Queue<Integer>[][] moveFish(Queue<Integer>[][] fish, int[][] smell, int sharkX, int sharkY) {
         int[] dx = {0, -1, -1, -1, 0, 1, 1, 1};
         int[] dy = {-1, -1, 0, 1, 1, 1, 0, -1};
 
-        List<Integer>[][] tmpFish = addList();
+        Queue<Integer>[][] tmpFish = addList();
         for(int i=0; i<N; i++) {
             for(int j=0; j<N; j++) {
                 while (!fish[i][j].isEmpty()){
-                    int dir = fish[i][j].remove(0);
+                    int dir = fish[i][j].remove();
                     boolean flag = false;
                     for(int k=0; k<8; k++){
                         int tmpDir = dir - k < 0 ? dir - k + 8 : dir - k;
@@ -202,15 +177,12 @@ public class Main {
         return tmpFish;
     }
 
-    private static List<Integer>[][] cloneFish(List<Integer>[][] fish) {
-        List<Integer>[][] output = new List[N][N];
-//        for(int i=0; i<N; i++) {
-//            output[i] = fish[i].clone();
-//        }
+    private static Queue<Integer>[][] cloneFish(Queue<Integer>[][] fish) {
+        Queue<Integer>[][] output = new Queue[N][N];
 
         for(int i=0; i<N; i++){
             for(int j=0; j<N; j++){
-                output[i][j] = new ArrayList<>(fish[i][j]);
+                output[i][j] = new LinkedList<>(fish[i][j]);
             }
         }
 
